@@ -9,7 +9,12 @@
                     <div class="text-center p-3">
                         <img src="assets/images/logo.png" alt="Notes logo">
                     </div>
-
+                    {{-- Login Error --}}
+                    <div>
+                        @if (session('loginError'))
+                            <div class="text-danger text-center">{{ session('loginError') }}</div>
+                        @endif
+                    </div>
                     <!-- form -->
                     <div class="row justify-content-center">
                         <div class="col-md-10 col-12">
