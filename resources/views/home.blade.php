@@ -2,52 +2,29 @@
 @section('content')
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-sm-8">
-                <div class="card p-5">
-
-                    <!-- logo -->
-                    <div class="text-center p-3">
-                        <img src="assets/images/logo.png" alt="Notes logo">
-                    </div>
-                    {{-- Login Error --}}
-                    <div>
-                        @if (session('loginError'))
-                            <div class="text-danger text-center">{{ session('loginError') }}</div>
-                        @endif
-                    </div>
-                    <!-- form -->
-                    <div class="row justify-content-center">
-                        <div class="col-md-10 col-12">
-                            <form action="{{ route('auth.loginSubmit') }}" method="post" novalidate>
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="text_username" class="form-label">Username</label>
-                                    <input type="email" class="form-control bg-dark text-info" name="text_username"
-                                        value="{{ old('text_username') }}" required>
-                                    @error('text_username')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="mb-3">
-                                    <label for="text_password" class="form-label">Password</label>
-                                    <input type="password" class="form-control bg-dark text-info" name="text_password"
-                                        value="{{ old('text_password') }}" required>
-                                    @error('text_password')
-                                        <div class="text-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="mb-3">
-                                    <button type="submit" class="btn btn-secondary w-100">LOGIN</button>
-                                </div>
-                            </form>
+            <div class="col">
+                @include('top_bar')
+                @if(count($notes) == 0)
+                    <div class="row mt-5">
+                        <div class="col text-center">
+                            <p class="display-6 mb-5 text-secondary opacity-50">You have no notes available!</p>
+                            <a href="{{ route('new') }}" class="btn btn-secondary btn-lg p-3 px-5">
+                                <i class="fa-regular fa-pen-to-square me-3"></i>Create Your First Note
+                            </a>
                         </div>
                     </div>
-
-                    <!-- copy -->
-                    <div class="text-center text-secondary mt-3">
-                        <small>&copy; <?= date('Y') ?> Notes</small>
+                @else
+                    <!-- notes are available -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="{{ route('new') }}" class="btn btn-secondary px-3">
+                            <i class="fa-regular fa-pen-to-square me-2"></i>New Note
+                        </a>
                     </div>
-                </div>
+
+                @foreach($notes as $note)
+                    @include('note')
+                @endforeach
+                @endif
             </div>
         </div>
     </div>
