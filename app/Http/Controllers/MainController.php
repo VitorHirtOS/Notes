@@ -17,7 +17,12 @@ class MainController extends Controller
     {
 
         $id = session('user.id');
-        $notes = User::find($id)->notes->toArray();
+        $notes = User::find($id)
+            ->notes()
+            ->whereNull('deleted_at')
+            ->get()
+            ->toArray();
+
         return view('home', compact('notes'));
     }
 
@@ -58,7 +63,8 @@ class MainController extends Controller
         return view('edit_note', ['note' => $note]);
     }
 
-    public function editNoteSubmit(Request $request){
+    public function editNoteSubmit(Request $request)
+    {
         $request->validate([
             'text_title' => 'required|min:3|max:200',
             'text_note' => 'required|min:3|max:3000'
@@ -71,7 +77,7 @@ class MainController extends Controller
             'text_note.max' => 'A note deve ter pelo menos :max caracteres',
         ]);
 
-        if($request->note_id == null){
+        if ($request->note_id == null) {
             return redirect()->to('home');
         }
 
@@ -87,7 +93,17 @@ class MainController extends Controller
     public function deleteNote($id)
     {
         $id = Operations::decryptId($id);
-        echo $id;
+        $note = Notes::find($id);
+        return view('delete_note', ['note' => $note]);
     }
 
+    public function deleteNoteConfirm($id) {
+        $id = Operations::decryptId($id);
+        $note = Notes::find($id);
+        //$note->delete();
+        //$note->deleted_at = date('Y-m-d H:i:s');
+        //$note->save();
+        $note->delete();
+        return redirect()->route('home');
+    }
 }
